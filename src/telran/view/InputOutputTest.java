@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import telran.employees.dto.Employee;
 
-class InputOutputTest {
+class InputOutputTest { 
 InputOutput io = new ConsoleInputOutput();
 	@BeforeEach
 	void setUp() throws Exception {

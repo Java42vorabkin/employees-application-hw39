@@ -3,6 +3,12 @@ package telran.employees.services;
 import telran.employees.dto.Employee;
 import telran.employees.dto.ReturnCode;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -149,13 +155,39 @@ public class EmployeesMethodsMapsImpl implements EmployeesMethods {
 	@Override
 	public void restore() {
 		// TODO Auto-generated method stub
-		
+		try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(fileName));) {
+			EmployeesMethodsMapsImpl restoredMaps = (EmployeesMethodsMapsImpl) inputStream.readObject();
+			this.employeesAge = restoredMaps.employeesAge;
+			this.employeesDepartment = restoredMaps.employeesDepartment;
+			this.employeesSalary = restoredMaps.employeesSalary;
+			this.mapEmployees = restoredMaps.mapEmployees;
+		} catch (FileNotFoundException e) {
+			this.mapEmployees = new HashMap<>();
+			this.employeesAge = new TreeMap<>();
+			this.employeesSalary = new TreeMap<>();
+			this.employeesDepartment = new HashMap<>();
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		} 
 	}
 
 	@Override
 	public void save() {
 		// TODO Auto-generated method stub
-		
+		try {
+			ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(fileName));
+			outputStream.writeObject(this);
+			outputStream.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+		/*
+		try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(fileName));\){
+			outputStream.writeObject(this);
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+		*/
 	}
 
 }
